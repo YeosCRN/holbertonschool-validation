@@ -1,5 +1,8 @@
 #!/bin/bash
-apt-get update && apt-get install -y make golang-go git curl
-curl -L https://github.com/gohugoio/hugo/releases/download/v0.84.0/hugo_0.84.0_Linux-64bit.deb -o hugo.deb
-apt install ./hugo.deb
+
+apt update && apt upgrade -y
+apt install -y wget make dpkg
+wget -O hugo_binary.deb https://github.com/gohugoio/hugo/releases/download/v0.111.3/hugo_extended_0.111.3_linux-amd64.deb
+dpkg -i hugo_binary.deb
+rm hugo_binary.deb
 make build

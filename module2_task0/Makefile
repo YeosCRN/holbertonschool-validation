@@ -1,42 +1,20 @@
-# Implement the next steps for the actual Go-Hugo website's source code
+build:	##  compile the source code of the application to a binary named awesome-api.
+		go get github.com/gorilla/mux
+		go build
 
-build: ## Generate the website from markdown and config files in the 'dist/' folder
-	@hugo
-	@go build -o awesome-api ./*.go
+run:	## Run the application in background by executing the binary awesome-api, and write logs into a file named awesome-api.log.
+		./awesome-api >./awesome-api.log 2>&1 &
 
-run: ## Run the application in background
-	@./awesome-api >./awesome.log 2>&1 &
+stop:	## Stop the application with the command kill XXXXX where XXXXX is the Process ID of the application.
+		kill "$(shell pgrep awesome-api)"
 
-stop: ## Stop the application with the command kill
-	@pkill awesome-api
+clean:	## Stop the application. Delete the binary awesome-api and the log file awesome-api.log.
+		-make stop
+		rm ./awesome-api ./awesome-api.log
 
-clean: stop ## Cleanup the content of the 'dist/' folder
-	@rm -Rf dist/*
-	@rm -f awesome-api awesome.log || true
+test:	## Check expected behaviour of the app.
+		curl http://localhost:9999
+		curl http://localhost:9999/health
 
-test: ## Ensure that it behaves as expected
-	@echo "# Test 1:"
-	@if curl http://localhost:9999; then \
-		echo "TESTOK" ;\
-	else \
-                echo "TESTFAILED" ;\
-	fi
-	@echo "# Test 2:"
-	@if curl http://localhost:9999/health; then \
-		echo ""; \
-		echo "TESTOK" ;\
-	else \
-		echo ""; \
-		echo "TESTFAILED" ;\
-	fi
-
-post: ## Create a new blog post using POST_TITLE and POST_NAME env variables
-	@rm -Rf content/posts/$(POST_NAME).md
-	@hugo new posts/$(POST_NAME).md
-	@sed -i 's/title:.*/title: $(POST_TITLE)/' content/posts/$(POST_NAME).md
-	@sed -i 's/draft:.*/draft: "false"/' content/posts/$(POST_NAME).md
-
-help: ## Show this help usage
-	@echo "Usage: make <command>"
-	@echo "-----"
-	@cat Makefile | grep "^\w*:.*##.*" | sed 's/## //'
+help:	## Shows this help messages.
+		@fgrep -h "##" $(MAKEFILE_LIST) | fgrep -v fgrep | sed -e 's/\\$$//' | sed -e 's/##//'

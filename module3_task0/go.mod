@@ -1,3 +1,5 @@
-module github.com/chrs-creyk/holbertonschool-validation
+module github.com/Dannyelgeek/awesome-api
 
-go 1.14
+go 1.20
+
+require github.com/gorilla/mux v1.8.0
