@@ -1,4 +1,4 @@
-module github.com/Dannyelgeek/awesome-api
+module github.com/YeosCRN/awesome-api
 
 go 1.20
 
